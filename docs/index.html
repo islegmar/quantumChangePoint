@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<!-- https://www.overleaf.com/learn/latex -->
+<!--
+\( .... \) : inline
+\[ .... \] : block
+_  and ^   : subindex and superindex    
+\sum       : sum
+{...}      : contains another latx expression (eg. symbols)
+-->
+<html>
+<head>
+  <title>Quantum Change Point</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+  <h1>Overview</h1>
+  Given status $\ket{0}$ and $\ket{\phi}$, we can construct the following POVM and get 3 possible results {a, b, c}:
+  <ul>
+    <li>Result <b>A</b> => \( E_{A} = \ket{1}\bra{1} \) (ortogonal to \( \ket{0} \)).</li>
+    <li>Result <b>B</b> => \(  E_{B} = \ket{\Phi}\bra{\Phi} \) (ortogonal to \( \ket{\phi} \)).</li>
+    <li>Result <b>C</b> => \( E_{C} = \mathbb{1} - \ket{1}\bra{1} - \ket{\Phi}\bra{\Phi} \) (to complete the  \( \mathbb{1} \)).</li>
+  </ul>
+  That means that if the result is:
+  <ul>
+    <li><b>A</b> : Input <b>must</b> be \( \ket{\phi} \)</li>
+    <li><b>B</b> : Input <b>must</b> be \( \ket{0} \)</li>
+    <li><b>C</b> : Inconcluse, it can be  \( \ket{0} \) OR \( \ket{\phi} \)</li>
+  </ul>
+  <p>In order to be able to distiguish between $\ket{0}$ and $\ket{\phi}$ we want to <b>minimize the result c</b>. So with the POVM defined we have the following table of probabilities of obtaining a certain result depending on the input</p>
+  <table border="1">
+    <tr>
+      <td colspan="2" rowspan="2"></td>
+      <td colspan="2">Input</td>
+    </tr>
+    <tr>
+      <td>\( \ket{0} \)</td>
+      <td>\( \ket{\phi} \)</td>
+    </tr>
+    <tr>
+      <td rowspan="3">Prob. Output</td>
+      <td>A</td>
+      <td>$\expval{E_{A}}{0}$</td>
+      <td>$\expval{E_{A}}{\phi}$</td>
+    </tr>
+    <tr>
+      <td>B</td>
+      <td>$\expval{E_{B}}{0}$</td>
+      <td>$\expval{E_{B}}{\phi}$</td>
+    </tr>
+    <tr>
+      <td>C</td>
+      <td>$\expval{E_{C}}{0}$</td>
+      <td>$\expval{E_{C}}{\phi}$</td>
+    </tr>
+  </table>
+
+  <p>Doing the substitutions and taking into account $pA + pB + pC = 1$:</p>
+
+  <table border="1">
+    <tr>
+      <td colspan="2" rowspan="2"></td>
+      <td colspan="2">Input</td>
+    </tr>
+    <tr>
+      <td>\( \ket{0} \)</td>
+      <td>\( \ket{\phi} \)</td>
+    </tr>
+    <tr>
+      <td rowspan="3">Prob. Output</td>
+      <td>A</td>
+      <td>$\braket{0}{1}\braket{1}{0} = 0$</td>
+      <td>$\braket{\phi}{1}\braket{1}{\phi}$</td>
+    </tr>
+    <tr>
+      <td>B</td>
+      <td>$\braket{0}{\Phi}\braket{\Phi}{0}$</td>
+      <td>$\braket{\phi}{\Phi}\braket{\Phi}{\phi} = 0$</td>
+    </tr>
+    <tr>
+      <td>C</td>
+      <td>$1 - pA - pB$</td>
+      <td>$1 - pA - pB$</td>
+    </tr>
+  </table>
+  <p>If we define $c = \braket{\phi}{0}$ we get the following relation:</p>
+  \[
+  \braket{1}{\phi}\braket{\phi}{1} = 1 -c^{2} 
+  \]
+  <p>and also (<b>formal demonstration needed</b>):</p>
+  \[
+  \braket{0}{\Phi}\braket{\Phi}{0} = 1 -c^{2}
+  \]
+  <p>so finally we get the following results:</p>
+  <table border="1">
+    <tr>
+      <td colspan="2" rowspan="2"></td>
+      <td colspan="2">Input</td>
+    </tr>
+    <tr>
+      <td>\( \ket{0} \)</td>
+      <td>\( \ket{\phi} \)</td>
+    </tr>
+    <tr>
+      <td rowspan="3">Prob. Output</td>
+      <td>A</td>
+      <td>$0$</td>
+      <td>$1-c^{2}$</td>
+    </tr>
+    <tr>
+      <td>B</td>
+      <td>$1-c^{2}$</td>
+      <td>$0$</td>
+    </tr>
+    <tr>
+      <td>C</td>
+      <td>$c^{2}$</td>
+      <td>$c^{2}$</td>
+    </tr>
+  </table>
+  <p>where $c = \braket{\phi}{0}$ and without losing generality we can say it is a Real number so $c \in [0,1]$</p>
+  <p>Let's analyze the personal case where $\ket{\phi} = \ket{1} =>  c=0$</p>
+  <table border="1">
+    <tr>
+      <td colspan="2" rowspan="2"></td>
+      <td colspan="2">Input</td>
+    </tr>
+    <tr>
+      <td>$\ket{0}$</td>
+      <td>$\ket{\phi} = \ket{1}$</td>
+    </tr>
+    <tr>
+      <td rowspan="3">Prob. Output</td>
+      <td>A</td>
+      <td>$0$</td>
+      <td>$1$</td>
+    </tr>
+    <tr>
+      <td>B</td>
+      <td>$1$</td>
+      <td>$0$</td>
+    </tr>
+    <tr>
+      <td>C</td>
+      <td>$0$</td>
+      <td>$0$</td>
+    </tr>
+  </table>
+  <p>So in that case we can distinguish both states without any doubt.</p>
+  <h1>Global Measurament (N=5)</h1>
+  <h2>Case $c=0$ (ortogonal states)</h2>
+  Matrix G:
+  <pre>
+  [[1. 0. 0. 0. 0.]
+   [0. 1. 0. 0. 0.]
+   [0. 0. 1. 0. 0.]
+   [0. 0. 0. 1. 0.]
+   [0. 0. 0. 0. 1.]]
+  </pre>
+  Matrix $\sqrt{G}$:
+  <pre>
+  [[1. 0. 0. 0. 0.]
+   [0. 1. 0. 0. 0.]
+   [0. 0. 1. 0. 0.]
+   [0. 0. 0. 1. 0.]
+   [0. 0. 0. 0. 1.]]
+  </pre>
+  Bounds for probabilities : $[1.0, 1.0]$
+  <h2>Case $c=0.001$ (very close to ortogonal state)</h2>
+  Matrix G:
+  <pre>
+  [[1.e+00 1.e-03 1.e-06 1.e-09 1.e-12]
+   [1.e-03 1.e+00 1.e-03 1.e-06 1.e-09]
+   [1.e-06 1.e-03 1.e+00 1.e-03 1.e-06]
+   [1.e-09 1.e-06 1.e-03 1.e+00 1.e-03]
+   [1.e-12 1.e-09 1.e-06 1.e-03 1.e+00]]
+  </pre>
+  Matrix $\sqrt{G}$:
+  <pre>
+  [[9.99999875e-01 5.00000000e-04 3.75000008e-07 3.12500005e-10 2.73173053e-13]
+   [5.00000000e-04 9.99999750e-01 4.99999937e-04 3.74999969e-07 3.12500018e-10]
+   [3.75000008e-07 4.99999937e-04 9.99999750e-01 4.99999938e-04 3.75000008e-07]
+   [3.12500022e-10 3.74999969e-07 4.99999938e-04 9.99999750e-01 5.00000000e-04]
+   [2.73375727e-13 3.12500033e-10 3.75000008e-07 5.00000000e-04 9.99999875e-01]]
+  </pre>
+  Bounds for probabilities : $[0.9999995999998768, 0.9999996601038843]$
+  <h2>Case $c={1 \over \sqrt{2}} = 0.7071067812$ ($45^{º}$)</h2>
+  Matrix G:
+  <pre>
+   [[1.         0.70710678 0.5        0.35355339 0.25      ]
+    [0.70710678 1.         0.70710678 0.5        0.35355339]
+    [0.5        0.70710678 1.         0.70710678 0.5       ]
+    [0.35355339 0.5        0.70710678 1.         0.70710678]
+    [0.25       0.35355339 0.5        0.70710678 1.        ]]
+  </pre>
+  Matrix $\sqrt{G}$:
+  <pre>
+  [[0.90706652 0.35006952 0.19017153 0.11436726 0.07373319]
+   [0.35006952 0.84970152 0.32996519 0.18303486 0.11436726]
+   [0.19017153 0.32996519 0.84256485 0.32996519 0.19017153]
+   [0.11436726 0.18303486 0.32996519 0.84970152 0.35006952]
+   [0.07373319 0.11436726 0.19017153 0.35006952 0.90706652]]
+  </pre>
+  Bounds for probabilities : $[0.759024612861236, 0.8623165655974296]$
+  <h2>Case $c=0.99999$ ($\ket{\phi}$ is almost $\ket{0}$ and can not be distiguished)</h2>
+  Matrix G:
+  <pre>
+  [[1.      0.99999 0.99998 0.99997 0.99996]
+    [0.99999 1.      0.99999 0.99998 0.99997]
+    [0.99998 0.99999 1.      0.99999 0.99998]
+    [0.99997 0.99998 0.99999 1.      0.99999]
+    [0.99996 0.99997 0.99998 0.99999 1.     ]]
+  </pre>
+  Matrix $\sqrt{G}$:
+  <pre>
+  [[0.45129219 0.44759358 0.44626956 0.4455936  0.44529223]
+   [0.44759358 0.44997265 0.44692208 0.44597265 0.4455936 ]
+   [0.44626956 0.44692208 0.44967574 0.44692208 0.44626956]
+   [0.4455936  0.44597265 0.44692208 0.44997265 0.44759358]
+   [0.44529223 0.4455936  0.44626956 0.44759358 0.45129219]]
+  </pre>
+  Bounds for probabilities : $ [0.20289716998191332, 0.21045502977159405]$
+  <p>If we make a graphic for $N=5$ of the bounds of the probabilities depending on $c$ we obtain:</p>
+  <img src="img/prob_5part.png"></img>
+  
+
+  
+  
+
+
+</body>
+<script>
+window.MathJax = {
+  loader: {
+    load: ['[tex]/physics']
+  }, 
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+    packages: {'[+]': ['physics']}
+  }
+};
+</script>
+</html>
