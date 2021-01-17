@@ -130,3 +130,4 @@ dmypy.json
 
 # Ny Stuff
 _OLD/
+*.swp
