@@ -15,19 +15,19 @@ _  and ^   : subindex and superindex
 </head>
 <body>
   <h1>Overview</h1>
-  Given status $\ket{0}$ and $\ket{\phi}$, we can construct the following POVM and get 3 possible results {a, b, c}:
+  <b>In general</b> : given status $\ket{0}$ and $\ket{\phi}$, we can construct the following <b>POVM</b> and get 3 possible results {A, B, C}:
   <ul>
-    <li>Result <b>A</b> => \( E_{A} = \ket{1}\bra{1} \) (ortogonal to \( \ket{0} \)).</li>
-    <li>Result <b>B</b> => \(  E_{B} = \ket{\Phi}\bra{\Phi} \) (ortogonal to \( \ket{\phi} \)).</li>
-    <li>Result <b>C</b> => \( E_{C} = \mathbb{1} - \ket{1}\bra{1} - \ket{\Phi}\bra{\Phi} \) (to complete the  \( \mathbb{1} \)).</li>
+    <li>Result <b>A</b> => \( E_{A} = \ket{1}\bra{1} \) (ortogonal to \( \ket{0} \)) =>  Input <b>must</b> be $\ket{\phi}$.</li>
+    <li>Result <b>B</b> => \(  E_{B} = \ket{\Phi}\bra{\Phi} \) (ortogonal to \( \ket{\phi} \)) =>  Input <b>must</b> be $\ket{0}$.</li>
+    <li>Result <b>C</b> => \( E_{C} = \mathbb{1} - \ket{1}\bra{1} - \ket{\Phi}\bra{\Phi} \) (to complete the  \( \mathbb{1} \)) =>  <b>Inconclusive</b>, it can be  \( \ket{0} \) OR \( \ket{\phi} \</li>
   </ul>
-  That means that if the result is:
+  <p>In what follows, we're only interested in being able to distingish $\ket{\phi}$ so we can define the following <b>PVM</b>:</p>
   <ul>
-    <li><b>A</b> : Input <b>must</b> be \( \ket{\phi} \)</li>
-    <li><b>B</b> : Input <b>must</b> be \( \ket{0} \)</li>
-    <li><b>C</b> : Inconcluse, it can be  \( \ket{0} \) OR \( \ket{\phi} \)</li>
+    <li>Result <b>A</b> => \( E_{A} = \ket{1}\bra{1} \). When we obtain this result we know <b>it must be</b> $\ket{\phi}$</li>
+    <li>Result <b>B</b> => \(  E_{B} = \ket{0}\bra{0} \). When we obtain this result <b>it is inconclusive</b></li>
   </ul>
-  <p>In order to be able to distiguish between $\ket{0}$ and $\ket{\phi}$ we want to <b>minimize the result c</b>. So with the POVM defined we have the following table of probabilities of obtaining a certain result depending on the input</p>
+
+  <p>In order to be able to distiguish between $\ket{\phi}$ we want to <b>minimize the result B</b>. So with the PVM defined we have the following table of probabilities of obtaining a certain result depending on the input</p>
   <table border="1">
     <tr>
       <td colspan="2" rowspan="2"></td>
@@ -48,14 +48,9 @@ _  and ^   : subindex and superindex
       <td>$\expval{E_{B}}{0}$</td>
       <td>$\expval{E_{B}}{\phi}$</td>
     </tr>
-    <tr>
-      <td>C</td>
-      <td>$\expval{E_{C}}{0}$</td>
-      <td>$\expval{E_{C}}{\phi}$</td>
-    </tr>
   </table>
 
-  <p>Doing the substitutions and taking into account $pA + pB + pC = 1$:</p>
+  <p>Doing the substitutions and taking into account the ortogonality of the elements we get:</p>
 
   <table border="1">
     <tr>
@@ -74,24 +69,11 @@ _  and ^   : subindex and superindex
     </tr>
     <tr>
       <td>B</td>
-      <td>$\braket{0}{\Phi}\braket{\Phi}{0}$</td>
-      <td>$\braket{\phi}{\Phi}\braket{\Phi}{\phi} = 0$</td>
-    </tr>
-    <tr>
-      <td>C</td>
-      <td>$1 - pA - pB$</td>
-      <td>$1 - pA - pB$</td>
+      <td>$\braket{0}{0}\braket{0}{0} = 1$</td>
+      <td>$\braket{\phi}{0}\braket{0}{\phi}$</td>
     </tr>
   </table>
-  <p>If we define $c = \braket{\phi}{0}$ we get the following relation:</p>
-  \[
-  \braket{1}{\phi}\braket{\phi}{1} = 1 -c^{2} 
-  \]
-  <p>and also (<b>formal demonstration needed</b>):</p>
-  \[
-  \braket{0}{\Phi}\braket{\Phi}{0} = 1 -c^{2}
-  \]
-  <p>so finally we get the following results:</p>
+  <p>If we define $c = \braket{\phi}{0}$ we can rewrite as:</p>
   <table border="1">
     <tr>
       <td colspan="2" rowspan="2"></td>
@@ -109,12 +91,7 @@ _  and ^   : subindex and superindex
     </tr>
     <tr>
       <td>B</td>
-      <td>$1-c^{2}$</td>
-      <td>$0$</td>
-    </tr>
-    <tr>
-      <td>C</td>
-      <td>$c^{2}$</td>
+      <td>$1$</td>
       <td>$c^{2}$</td>
     </tr>
   </table>
@@ -138,11 +115,6 @@ _  and ^   : subindex and superindex
     <tr>
       <td>B</td>
       <td>$1$</td>
-      <td>$0$</td>
-    </tr>
-    <tr>
-      <td>C</td>
-      <td>$0$</td>
       <td>$0$</td>
     </tr>
   </table>
