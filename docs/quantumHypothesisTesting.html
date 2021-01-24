@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<!-- https://www.overleaf.com/learn/latex -->
+<!--
+\( .... \) : inline
+\[ .... \] : block
+_  and ^   : subindex and superindex    
+\sum       : sum
+{...}      : contains another latx expression (eg. symbols)
+-->
+<html>
+<head>
+  <title>Quantum Hypothesis Testing</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+  <h1>Simple, Binary Hypothesis Testing</h1>
+  <p>
+  Consider two arbitrary qubits states $\Psi_1, \Psi_2 \in H_2$ such that
+  \[
+  \braket{\Psi_1}{\Psi_2} = c \in R
+  \]
+
+  <div class="exercise">
+    <hr/>
+    <p class="question">
+      <b>QUESTION (i)</b><br/>
+      Argue (wither mathematically or otherwise) why we can lwithout loss of generality, take the states to be
+      \[
+      \Psi_1 = \ket{0}
+      \]
+      \[
+      \Psi_2 = \Phi = c\ket{0} + \sqrt{1-c^2}\ket{1}
+      \]
+    </p>
+
+    <p class="answer">
+      <b>ANSWER</b>
+      <p>
+      With this change of basis the length of the vectors remain unitary
+      \[
+      TBD
+      \]
+      and their scalar product remains the same
+      \[
+      \braket{\Psi_1}{\Psi_2} = \bra{0}(c\ket{0} + \sqrt{1-c^2}\ket{1}) = c 
+      \]
+      as before
+      </p>
+    </p>
+  </div>
+
+  <div class="exercise">
+    <hr/>
+    <p class="question">
+      <b>QUESTION (ii)</b><br/>
+      Consider the projective measurement
+      \[
+      \Pi_1 = \ket{\Psi_1}\bra{\Psi_1}
+      \]
+      \[
+      \Pi_2 = \mathbb{1} - \Pi_1
+      \]
+      Compute the conditional probabilities of getting the <b>outcome i</b> when the system is in state $\Psi_i$:
+      \[
+      p(i|j) = tr ( \Pi_i \ket{\Psi_j} \bra{\Psi_j} )
+      \]
+    </p>
+
+    <p class="answer">
+      <b>ANSWER</b>
+      <p>
+      We can rewrite 
+      \[
+      p(i|j) = tr ( \Pi_i \ket{\Psi_j} \bra{\Psi_j} ) = \expval{\Pi_i}{\Psi_j}
+      \]
+      and computing we get
+      \[
+      p(1|1) = \expval{\Pi_1}{\Psi_1} = \expval{\ket{\Psi_1}\bra{\Psi_1}}{\Psi_1} = 1
+      \]
+      \[
+      p(1|2) = \expval{\Pi_1}{\Psi_2} = \expval{\ket{\Psi_1}\bra{\Psi_1}}{\Psi_2} = c^2
+      \]
+      \[
+      p(2|1) = \expval{\Pi_2}{\Psi_1} = \expval{(\mathbb{1} - \Pi_1)}{\Psi_1} = 0
+      \]
+      \[
+      p(2|2) = \expval{\Pi_2}{\Psi_2} = \expval{(\mathbb{1} - \Pi_1)}{\Psi_2} = 1 - c^2
+      \]
+      </p>
+    </p>
+  </div>
+
+  <div class="exercise">
+    <hr/>
+    <p class="question">
+      <b>QUESTION (iii)</b><br/>
+      A device is known to prepare the spin state of an electron either in state $\Psi_1$ with probability $\eta$ or in state $\Psi_2$ with probability $1-\eta$.<br>
+      Given that we perform the projective measurement $\{\Pi_1, \Pi_2\}$ compute the <b>likelihood</b> $L(j|i)$ that <b>outcome i</b> is due to the fact that the spin of the electron was in state $\Psi_j$.
+    </p>
+    <p class="answer">
+      <b>ANSWER</b>
+      <p>
+        A good source of information is <a href="https://en.wikipedia.org/wiki/Likelihood_function#Discrete_probability_distribution">Likelihood_function : Discrete_probability_distribution</a><br>
+        If we "translate" what is there to our problem we have:
+        <ul>
+          <li>Instead Tails and Heads (as possible results), we get the output of $\Pi_1$ and $\Pi_2$.</li>
+          <li>Instead two coins, one fair and the other unfair, we have two possible states $\Psi_1$ and $\Psi_2$.</li>
+          <li>With coins both have different probabilities of getting Heads; eg. $Coin_1$ has a $p_H=0.7$ and $Coin_2$ has a $p_H=0.5$.
+          <li>In our case the probability of getting the possible outcomes (from $\Pi_1$ and $\Pi_2$) is different depending of the state $\Psi_1$ and $\Psi_2$ (see previous exercise)</li>
+        </ul>
+        With all this into account we get that <b>for a single output</b> the likelhood is like the probability we computed in the previous execise.<br>
+        The notation is confusing:
+        <ul>
+          <li>p(<i>result</i> | <i>state</i>)</li>
+          <li>L(<i>state</i>  | <i>result</i>)</li>
+        </ul>
+        With all that we get that <b>for a single outome</b> the likelihoods are:
+        <ul>
+          <li>L(1|1) = p(1|1) = 1</li>
+          <li>L(1|2) = p(2|1) = 0</li>
+          <li>L(2|1) = p(1|2) = $c^2$</li>
+          <li>L(2|2) = p(2|2) = $1-c^2$</li>
+        </ul>
+        In general, in a Bernoulli distribution where we have 2 possible states-j and 2 possible outcome-i, if we measure a result X where:
+        <ul>
+          <li>$x$ times the outcome-1, where $p$ is the probability of result-1 in state-j.</li>
+          <li>$1-x$ times the outcome-2, where $1-p$ is the probability of result-2 in state-j.</li>
+        </ul>
+        in that case the likelihood is:
+        \[
+        L( j|X ) = p^{x}  (1-p)^{(1-x)}
+        \]
+        where as mentioned the values of $p$ depends of state-j so maybe it could be written more precisely as
+        \[
+        L( j|X ) = p_j^{x}  (1-p_j)^{(1-x)}
+        \]
+      </p>
+    </p>
+  </div>
+
+  <div class="exercise">
+    <hr/>
+    <p class="title">
+    <b>(iv)</b> An <b>estimator</b> is any function $ f : \{1,2\} -> \{1,2\}$ hat assigns to each measurement outcome $i \in \{1,2\}$ a guess $f(i) \in \{1,2\}$ regarding which state the electron's spin was in. Using your results in (iii) tell me your guess for each possible measurement outcome. This estimation is known as the <b>Maximum Likelihood Estimator (MLE)</b>.
+    </p>
+  </div>
+  
+  
+
+
+</body>
+<script>
+window.MathJax = {
+  loader: {
+    load: ['[tex]/physics']
+  }, 
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+    packages: {'[+]': ['physics']}
+  }
+};
+</script>
+</html>
