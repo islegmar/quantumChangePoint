@@ -135,6 +135,24 @@ _  and ^   : subindex and superindex
         \[
         L( j|X ) = p_j^{x}  (1-p_j)^{(1-x)}
         \]
+        If we apply Bayes' theorem 
+        \[
+        L(1|1) = P(\Psi_1|\Pi_1) = {P(\Pi_1|\Psi_1)P(\Psi_1) \over P(\Pi_1)} = {P(\Pi_1|\Psi_1)P(\Psi_1) \over {P(\Pi_1|\Psi_1)P(\Psi_1) + P(\Pi_1|\Psi_2)P(\Psi_2)}} = {\eta \over {\eta + c^2(1-\eta)}}
+        \]
+        \[
+        L(2|1) = P(\Psi_2|\Pi_1) = {P(\Pi_1|\Psi_2)P(\Psi_2) \over P(\Pi_1)} = {P(\Pi_1|\Psi_2)P(\Psi_2) \over {P(\Pi_1|\Psi_1)P(\Psi_1) + P(\Pi_1|\Psi_2)P(\Psi_2)}} = {c^2(1-\eta) \over \eta + c^2(1-\eta)}
+        \]
+        \[
+        L(1|2) = P(\Psi_1|\Pi_2) = {P(\Pi_2|\Psi_1)P(\Psi_1) \over P(\Pi_2)} = {P(\Pi_2|\Psi_1)P(\Psi_1) \over {P(\Pi_2|\Psi_1)P(\Psi_1) + P(\Pi_2|\Psi_2)P(\Psi_2)}} = 0
+        \]
+        \[
+        L(2|2) = P(\Psi_2|\Pi_2) = {P(\Pi_2|\Psi_2)P(\Psi_2) \over P(\Pi_2)} = {P(\Pi_2|\Psi_2)P(\Psi_2) \over {P(\Pi_2|\Psi_1)P(\Psi_1) + P(\Pi_2|\Psi_2)P(\Psi_2)}} = 1
+        \]
+        and we can check how the probabilities sum 1
+        <ul>
+          <li>If we get result $\Pi_1$ then $P(\Psi_1|\Pi_1) + P(\Psi_2|\Pi_1) = 1$.</li>
+          <li>If we get result $\Pi_2$ then $P(\Psi_1|\Pi_2) + P(\Psi_2|\Pi_2) = 1$.</li>
+        </ul>
       </p>
     </p>
   </div>
@@ -142,11 +160,86 @@ _  and ^   : subindex and superindex
   <div class="exercise">
     <hr/>
     <p class="title">
-    <b>(iv)</b> An <b>estimator</b> is any function $ f : \{1,2\} -> \{1,2\}$ hat assigns to each measurement outcome $i \in \{1,2\}$ a guess $f(i) \in \{1,2\}$ regarding which state the electron's spin was in. Using your results in (iii) tell me your guess for each possible measurement outcome. This estimation is known as the <b>Maximum Likelihood Estimator (MLE)</b>.
+    <b>(iv)</b> An <b>estimator</b> is any function $ f : \{1,2\} \rightarrow \{1,2\}$ that assigns to each measurement outcome $i \in \{1,2\}$ a guess $f(i) \in \{1,2\}$ regarding which state the electron's spin was in. Using your results in (iii) tell me your guess for each possible measurement outcome. This estimation is known as the <b>Maximum Likelihood Estimator (MLE)</b>.
     </p>
+    <p class="answer">
+      <b>ANSWER</b><br/>
+      <ul>
+        <li>If the <b>outcome is $\Pi_2$</b> then it is clear that the status is $\Psi_2$.</li>
+        <li>If the <b>outcome is $\Pi_1$</b> then can be $\Psi_1$ or $\Psi_2$ depending on $c$ and $\eta$.</li>
+      </ul>
+      Let's do the calculus for $\Pi_1$:
+      \[
+      P(\Psi_1|\Pi_1) = P(\Psi_2|\Pi_1)
+      \]
+      \[
+      {\eta \over {\eta + c^2(1-\eta)}} =  {c^2(1-\eta) \over \eta + c^2(1-\eta)}
+      \]
+      \[
+      c = \sqrt{\eta \over 1 - \eta}
+      \]
+      So:
+      <ul>
+        <li>If $c > \sqrt{\eta \over 1 - \eta} \rightarrow P(\Psi_1|\Pi_1) < P(\Psi_2|\Pi_1)$.</li>
+        <li>If $c < \sqrt{\eta \over 1 - \eta} \rightarrow P(\Psi_1|\Pi_1) > P(\Psi_2|\Pi_1)$.</li>
+      </ul>
+      So putting all together we get that the function is:
+      <ul>
+        <li>If $c < \sqrt{\eta \over 1 - \eta}$.
+          <ul>
+            <li>f(1) = 1</li>
+            <li>f(2) = 2</li>
+          </ul>
+        </li>
+        <li>If $c > \sqrt{\eta \over 1 - \eta}$.
+          <ul>
+            <li>f(1) = 2</li>
+            <li>f(2) = 2</li>
+          </ul>
+        </li>
+      <ul>
+    <p>
   </div>
   
   
+  <div class="exercise">
+    <hr/>
+    <p class="question">
+      <b>QUESTION (v)</b><br/>
+      For any estimator f, the probability of success is given by
+      \[
+      P_S = \eta P(f(i)=1|1) + (1-\eta) P(f(i)=2|2)
+      \]
+      Compute $P_S$ for the MLE.
+    </p>
+
+    <p class="answer">
+      <b>ANSWER</b><br/>
+      The strategy is different depending on the relation between $c$ and $\eta$.<br/>
+      <u>Case 1</u> : $c < \sqrt{\eta \over 1 - \eta}$<br/>
+      In this case the function is:
+      <ul>
+        <li>f(1) = 1 => If we see $\Pi_1$ we will always bet per$\Psi_1$</li>
+        <li>f(2) = 2 => If we see $\Pi_2$ we will always bet per$\Psi_2$</li>
+      </ul>
+      So 
+      \[
+      P_S = \eta P(\Psi_1|\Pi_1) + (1-\eta)P(\Psi_2|\Pi_2) = \eta = {\eta + c^2(1-\eta)^2 \over \eta + c^2(1-\eta)}
+      \]
+      <u>Case 2</u> : $c > \sqrt{\eta \over 1 - \eta}$<br/>
+      In this case the function is:
+      <ul>
+        <li>f(1) = 2 => If we see $\Pi_1$ we will always bet per$\Psi_2$</li>
+        <li>f(2) = 2 => If we see $\Pi_2$ we will always bet per$\Psi_2$</li>
+      </ul>
+      So 
+      \[
+      P_S = \eta P(\Psi_2|\Pi_1) + (1-\eta)P(\Psi_2|\Pi_2) = { c^2(1-\eta) \over \eta + c^2(1-\eta)}
+      \]
+      <u>Case 2</u><br/>
+      
+    </p>
+  </div>
 
 
 </body>
