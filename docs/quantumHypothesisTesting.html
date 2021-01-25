@@ -99,6 +99,26 @@ _  and ^   : subindex and superindex
       Given that we perform the projective measurement $\{\Pi_1, \Pi_2\}$ compute the <b>likelihood</b> $L(j|i)$ that <b>outcome i</b> is due to the fact that the spin of the electron was in state $\Psi_j$.
     </p>
     <p class="answer">
+      <b>Some thoughts</b><br/>
+      We can describe the problem as follows:
+      <ul>
+        <li>We have one machine which produces two states $\Psi_1$, $\Psi_2$.</li>
+        <li>This machine does not produce both states with the same probability : states $\Psi_1$ is produced with probability $\p$ and state $\Psi_2$ with probability $1 - p$.</li>
+        <li>We can perform a measurament { $\Pi_1$, $\Pi_2$ } with 4 different conditional probabilitites:
+          <ul>
+            <li>P($\Pi_1$|$\Psi_1$) : probability of measuring $\Pi_1$ if the state is $\Psi_1$</li>
+            <li>P($\Pi_2$|$\Psi_1$) : ...</li>
+            <li>P($\Pi_1$|$\Psi_2$) : ...</li>
+            <li>P($\Pi_2$|$\Psi_2$) : ...</li>
+            <li>P($\Pi_1$|$\Psi_1$) : probability of measuring $Pi_1$ if the state is $Psi_1$</li>
+          </ul>
+        </li>
+      </ul>
+      With this on mind:
+      <ul>
+        <li>Option 1 : I receive a particle from the machine, perform a measurament, I <b>know the result</b> (eg. $\Pi_1$) and the likelihood is the probability that the probability that I received was $\Psi_1$; so I want $P($\Psi_1|$\Pi_1)$ and we apply Bayes for that.</li>
+        <li>Option 2 : I <b>know the state</b> (eg. $\Psi_1$) and I am asked abouy the probability of getting a certain fex. the result $\Pi_1$; so I am asked for L($\Psi_2$|$\Pi_1$) = 1 - p = 1 - P($\Pi_1$|$\Psi_2$).</li>
+      </ul>
       <b>ANSWER</b>
       <p>
         A good source of information is <a href="https://en.wikipedia.org/wiki/Likelihood_function#Discrete_probability_distribution">Likelihood_function : Discrete_probability_distribution</a><br>
@@ -236,11 +256,52 @@ _  and ^   : subindex and superindex
       \[
       P_S = \eta P(\Psi_2|\Pi_1) + (1-\eta)P(\Psi_2|\Pi_2) = { c^2(1-\eta) \over \eta + c^2(1-\eta)}
       \]
-      
     </p>
   </div>
 
+  <div class="exercise">
+    <hr/>
+    <p class="question">
+      <b>QUESTION (vi)</b><br/>
+      Now consider performing the projective measurament 
+      \[
+      \Pi_1 = \ket{\Phi}\bra{\Phi}
+      \]
+      \[
+      \Pi_2 = \mathbb{1} - \ket{\Phi}\bra{\Phi}
+      \]
+      where
+      \[
+      \Phi = cos{\Phi \over 2}\ket{0} + sin{\Phi \over 2}\ket{1} , 0
+      \]
+    </p>
 
+    <p class="answer">
+      <b>ANSWER</b><br/>
+    </p>
+  </div>
+
+  <div class="exercise">
+    <hr/>
+    <p class="question">
+      <b>QUESTION (vii)</b><br/>
+    </p>
+
+    <p class="answer">
+      <b>ANSWER</b><br/>
+    </p>
+  </div>
+
+  <div class="exercise">
+    <hr/>
+    <p class="question">
+      <b>QUESTION (viii)</b><br/>
+    </p>
+
+    <p class="answer">
+      <b>ANSWER</b><br/>
+    </p>
+  </div>
 </body>
 <script>
 window.MathJax = {
