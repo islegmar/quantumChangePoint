@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<!-- https://www.overleaf.com/learn/latex -->
+<!--
+\( .... \) : inline
+\[ .... \] : block
+_  and ^   : subindex and superindex    
+\sum       : sum
+{...}      : contains another latx expression (eg. symbols)
+-->
+<html>
+<head>
+  <title>Doubt Estimator</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+  <h1>Doubt Estimator</h1>
+
+  <div id="q4" class="exercise">
+    <h2>The Question</h2>
+    <p>
+      An <b>estimator</b> is any function $ f : \{1,2\} \rightarrow \{1,2\}$ that assigns to each measurement outcome $i \in \{1,2\}$ a guess $f(i) \in \{1,2\}$ regarding which state the electron's spin was in. Using your results in (iii) tell me your guess for each possible measurement outcome. This estimation is known as the <b>Maximum Likelihood Estimator (MLE)</b>.
+    </p>
+    <h2>The Answer</h2>
+      Let's use probabilities.<br/>
+      So given a result $\Pi_i$ we have to "bet" for wich is the state with a higher probability for producing it. So, we have to find the bigger between:
+      <ul>
+        <li>If we obtain $\Pi_1$ we have to check which is bigger:
+          <ul>
+            <li>$P(\Psi_1|\Pi_1) = {\eta \over {\eta + c^2(1-\eta)}}$</li>
+            <li>$P(\Psi_2|\Pi_1) = {c^2(1-\eta) \over \eta + c^2(1-\eta)}$</li>
+          </ul>
+        </li>
+        <li>If we obtain $\Pi_2$ we have to check which is bigger
+          <ul>
+            <li>$P(\Psi_1|\Pi_2) = 0$</li>
+            <li>$P(\Psi_2|\Pi_2) = 1$</li>
+          </ul>
+        </li>
+      </ul>
+      From that we can observe:
+      <ul>
+        <li>If the <b>outcome is $\Pi_1$</b> then the best strategy can be $\Psi_1$ or $\Psi_2$ depending on $c$ and $\eta$.</li>
+        <li>If the <b>outcome is $\Pi_2$</b> then it is clear that the strategy is $\Psi_2$.</li>
+      </ul>
+      Let's analyze with more detail the possibilities when $\Pi_1$:
+      <h3>Bet for $\Psi_1$</h3>
+      In that case $P(\Psi_1|\Pi_1) > P(\Psi_2|\Pi_1) \rightarrow {\eta \over {\eta + c^2(1-\eta)}} > {c^2(1-\eta) \over \eta + c^2(1-\eta)}$.
+      <p>The graph can be found <a href="https://www.wolframalpha.com/input/?i=Plot%5B%7Bn%2F%28n%2Bc%5E2*%281-n%29%29+%3E+c%5E2*%281-n%29%2F%28n%2Bc%5E2*%281-n%29%29%7D%2C+%7Bn%2C+0%2C+1%7D%2C+%7Bc%2C0%2C1%7D%5D">here</a></p>
+      <img src="img/BetterPsi1.png" width="400px"></img>
+
+      <h3>Bet for $\Psi_2$</h3>
+      In that case $P(\Psi_1|\Pi_1) < P(\Psi_2|\Pi_1) \rightarrow {\eta \over {\eta + c^2(1-\eta)}} < {c^2(1-\eta) \over \eta + c^2(1-\eta)}$.
+      <p>The graph can be found <a href="https://www.wolframalpha.com/input/?i=Plot%5B%7Bn%2F%28n%2Bc%5E2*%281-n%29%29+%3C+c%5E2*%281-n%29%2F%28n%2Bc%5E2*%281-n%29%29%7D%2C+%7Bn%2C+0%2C+1%7D%2C+%7Bc%2C0%2C1%7D%5D">here</a></p>
+      <img src="img/BetterPsi2.png" width="400px"></img>
+
+      <ul>
+      </ul>
+      From the graphics we can see there are combinations of $c$ and $\eta$ where $\Psi_1$ is the best options and other when $\Psi_2$ is bettter, but acording the resolution of the exercise (and checking the likelihoods instead the probabilitites) when getting $\Pi_1$ we have to choose $\Psi_1$:
+      <ul>
+        <li>f(1) = 1</li>
+        <li>f(2) = 2</li>
+      </ul>
+      In fact this can be checked easily using likelihood instead probabilities becuse in this case for the case $\Pi_2$ we have to check which is bigger:
+      <ul>
+        <li>$L(\Psi_1|\Pi_1) = 1$</li>
+        <li>$L(\Psi_2|\Pi_1) = c^2 $</li>
+      </ul>
+      and in that case no doubt, $\Psi_1$ is better <b>but we don't understand the use of the likelihood without taking into consideration the probability of producing $\Psi_1$ or $\Psi_2$; bet for $\Psi_1$ even when it the answer more probable if $\Psi_1$ is very seldom maybe is not the best strategy</b>
+      <h2>An Hypothesis</h2>
+      Ok, taking a look to the graphics it is clear that <b>if we know $c$ and $\eta$</b> the strategy for $\Pi_1$ can vary but the fact that we chose $\Psi_1$ is because maybe we <b>do not know $\eta$</b> and in this case, taking a look to the graophics, we see the one "with more area" of success is $\Phi_1$ and then it's the best opption. Also it agrees with the use of likelihood that does not have into account $\eta$.
+  </div>
+</body>
+<script>
+window.MathJax = {
+  loader: {
+    load: ['[tex]/physics']
+  }, 
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+    packages: {'[+]': ['physics']}
+  }
+};
+</script>
+</html>
