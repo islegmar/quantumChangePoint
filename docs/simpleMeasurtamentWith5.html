@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<!-- https://www.overleaf.com/learn/latex -->
+<!--
+\( .... \) : inline
+\[ .... \] : block
+_  and ^   : subindex and superindex    
+\sum       : sum
+{...}      : contains another latx expression (eg. symbols)
+-->
+<html>
+<head>
+  <title>Simple Measurament with 5 qubits</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+  <h1>Simple Measurament with 5 qubits</h1>
+  <h2>Experiments</h2>
+  We have to consider the following "experiments":
+  <ul>
+    <li>#0 : $\Psi_1,\Psi_1,\Psi_1,\Psi_1,\Psi_1$</li>
+    <li>#1 : $\Psi_1,\Psi_1,\Psi_1,\Psi_1,\Psi_2$</li>
+    <li>#2 : $\Psi_1,\Psi_1,\Psi_1,\Psi_2,\Psi_2$</li>
+    <li>#3 : $\Psi_1,\Psi_1,\Psi_2,\Psi_2,\Psi_2$</li>
+    <li>#4 : $\Psi_1,\Psi_2,\Psi_2,\Psi_2,\Psi_2$</li>
+    <li>#5 : $\Psi_2,\Psi_2,\Psi_2,\Psi_2,\Psi_2$</li>
+  </ul>
+  Remember that our strategy is:
+  <ul>
+    <li>$\Pi_1 \rightarrow \Psi_1$</li>
+    <li>$\Pi_2 \rightarrow \Psi_2$</li>
+  </ul>
+  <h3>Experiment #0</h3>
+  In that case when we measure we will get <b>always</b> the outcome $\Pi_1$ (because $P(\Pi_2|\Psi_1)=0$) and our "bet" is $\Psi_1$ son 100% success.<br/>
+
+  <h3>Experiment #1</h3>
+  The four first qubits are like the previous one but in the last ($\Psi_2$) we can get:
+  <ul>
+    <li>$\Pi_1$ $\rightarrow$ we will "bet" for $\Psi_1$ $\rightarrow$ Fail</li>
+    <li>$\Pi_2$ $\rightarrow$ we will "bet" for $\Psi_2$ $\rightarrow$ Ok</li>
+  </ul>
+  How often do we suceed? This is the same than asking the probability of measuring $\Pi_2 \rightarrow P(\Pi_2|\Psi_2) = 1 - c^2$<br>
+  So the probability of success is $1-c^2$<br/>
+
+  <h3>Experiment #2</h3>
+  The stragtegy is the same, but in that case there are 2 states $\Psi_2$ so the probability of success is $(1-c^2)^2$.
+
+  <h3>Experiment #n</h3>
+  So in genertal if we have $n$ particles $\Psi_2$ the probability of success is $(1-c^2)^n$
+
+  <h2>Some examples</h2>
+  In the case the $c=0$ the probability of sucess is $(1-c^2)^n = 1$. This is because in this case both states are ortogonal and perfectly distinguible.<br/>
+  In the case the $c \approx 1$ the probability of sucess is $(1-c^2)^n \approx 0$. This is because in this case both states are almost equal and can not be distinguished.<br/>
+  We can see a graph in <a href="https://www.wolframalpha.com/input/?i=Plot+%5B%7B%281-c%5E2%29%5En%7D%2C+%7Bc%2C0%2C1%7D%2C%7Bn%2C0%2C5%7D%5D">here</a><br/>
+
+
+</body>
+<script>
+window.MathJax = {
+  loader: {
+    load: ['[tex]/physics']
+  }, 
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+    packages: {'[+]': ['physics']}
+  }
+};
+</script>
+</html>

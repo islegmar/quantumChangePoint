@@ -15,13 +15,22 @@ _  and ^   : subindex and superindex
 </head>
 <body>
   <h1>Simple, Binary Hypothesis Testing</h1>
+  <h2>Table of contets</h2>
+  <a href="#q1">Question i : change states</a><br/>
+  <a href="#q2">Question ii : conditional probabilitites</a><br/>
+  <a href="#q3">Question iii : likelihood</a><br/>
+  <a href="#q4">Question iv : estimator</a><br/>
+  <a href="#q5">Question v : probability of success</a><br/>
+  <a href="#q6">Question vi : compute with another projective measurement</a><br/>
+  <a href="#q7">Question vii : determinte probability of success (depending angle)</a><br/>
+  <a href="#q8">Question viii : draw bloch sphere</a><br/>
   <p>
   Consider two arbitrary qubits states $\Psi_1, \Psi_2 \in H_2$ such that
   \[
   \braket{\Psi_1}{\Psi_2} = c \in R
   \]
 
-  <div class="exercise">
+  <div id="q1" class="exercise">
     <hr/>
     <p class="question">
       <b>QUESTION (i)</b><br/>
@@ -50,7 +59,7 @@ _  and ^   : subindex and superindex
     </p>
   </div>
 
-  <div class="exercise">
+  <div id="q2" class="exercise">
     <hr/>
     <p class="question">
       <b>QUESTION (ii)</b><br/>
@@ -91,7 +100,7 @@ _  and ^   : subindex and superindex
     </p>
   </div>
 
-  <div class="exercise">
+  <div id="q3" class="exercise">
     <hr/>
     <p class="question">
       <b>QUESTION (iii)</b><br/>
@@ -99,130 +108,99 @@ _  and ^   : subindex and superindex
       Given that we perform the projective measurement $\{\Pi_1, \Pi_2\}$ compute the <b>likelihood</b> $L(j|i)$ that <b>outcome i</b> is due to the fact that the spin of the electron was in state $\Psi_j$.
     </p>
     <p class="answer">
-      <b>Some thoughts</b><br/>
-      We can describe the problem as follows:
-      <ul>
-        <li>We have one machine which produces two states $\Psi_1$, $\Psi_2$.</li>
-        <li>This machine does not produce both states with the same probability : states $\Psi_1$ is produced with probability $\p$ and state $\Psi_2$ with probability $1 - p$.</li>
-        <li>We can perform a measurament { $\Pi_1$, $\Pi_2$ } with 4 different conditional probabilitites:
-          <ul>
-            <li>P($\Pi_1$|$\Psi_1$) : probability of measuring $\Pi_1$ if the state is $\Psi_1$</li>
-            <li>P($\Pi_2$|$\Psi_1$) : ...</li>
-            <li>P($\Pi_1$|$\Psi_2$) : ...</li>
-            <li>P($\Pi_2$|$\Psi_2$) : ...</li>
-            <li>P($\Pi_1$|$\Psi_1$) : probability of measuring $Pi_1$ if the state is $Psi_1$</li>
-          </ul>
-        </li>
-      </ul>
-      With this on mind:
-      <ul>
-        <li>Option 1 : I receive a particle from the machine, perform a measurament, I <b>know the result</b> (eg. $\Pi_1$) and the likelihood is the probability that the probability that I received was $\Psi_1$; so I want $P($\Psi_1|$\Pi_1)$ and we apply Bayes for that.</li>
-        <li>Option 2 : I <b>know the state</b> (eg. $\Psi_1$) and I am asked abouy the probability of getting a certain fex. the result $\Pi_1$; so I am asked for L($\Psi_2$|$\Pi_1$) = 1 - p = 1 - P($\Pi_1$|$\Psi_2$).</li>
-      </ul>
-      <b>ANSWER</b>
-      <p>
-        A good source of information is <a href="https://en.wikipedia.org/wiki/Likelihood_function#Discrete_probability_distribution">Likelihood_function : Discrete_probability_distribution</a><br>
-        If we "translate" what is there to our problem we have:
-        <ul>
-          <li>Instead Tails and Heads (as possible results), we get the output of $\Pi_1$ and $\Pi_2$.</li>
-          <li>Instead two coins, one fair and the other unfair, we have two possible states $\Psi_1$ and $\Psi_2$.</li>
-          <li>With coins both have different probabilities of getting Heads; eg. $Coin_1$ has a $p_H=0.7$ and $Coin_2$ has a $p_H=0.5$.
-          <li>In our case the probability of getting the possible outcomes (from $\Pi_1$ and $\Pi_2$) is different depending of the state $\Psi_1$ and $\Psi_2$ (see previous exercise)</li>
-        </ul>
-        With all this into account we get that <b>for a single output</b> the likelhood is like the probability we computed in the previous execise.<br>
-        The notation is confusing:
-        <ul>
-          <li>p(<i>result</i> | <i>state</i>)</li>
-          <li>L(<i>state</i>  | <i>result</i>)</li>
-        </ul>
-        With all that we get that <b>for a single outome</b> the likelihoods are:
-        <ul>
-          <li>L(1|1) = p(1|1) = 1</li>
-          <li>L(1|2) = p(2|1) = 0</li>
-          <li>L(2|1) = p(1|2) = $c^2$</li>
-          <li>L(2|2) = p(2|2) = $1-c^2$</li>
-        </ul>
-        In general, in a Bernoulli distribution where we have 2 possible states-j and 2 possible outcome-i, if we measure a result X where:
-        <ul>
-          <li>$x$ times the outcome-1, where $p$ is the probability of result-1 in state-j.</li>
-          <li>$1-x$ times the outcome-2, where $1-p$ is the probability of result-2 in state-j.</li>
-        </ul>
-        in that case the likelihood is:
-        \[
-        L( j|X ) = p^{x}  (1-p)^{(1-x)}
-        \]
-        where as mentioned the values of $p$ depends of state-j so maybe it could be written more precisely as
-        \[
-        L( j|X ) = p_j^{x}  (1-p_j)^{(1-x)}
-        \]
-        If we apply Bayes' theorem 
-        \[
-        L(1|1) = P(\Psi_1|\Pi_1) = {P(\Pi_1|\Psi_1)P(\Psi_1) \over P(\Pi_1)} = {P(\Pi_1|\Psi_1)P(\Psi_1) \over {P(\Pi_1|\Psi_1)P(\Psi_1) + P(\Pi_1|\Psi_2)P(\Psi_2)}} = {\eta \over {\eta + c^2(1-\eta)}}
-        \]
-        \[
-        L(2|1) = P(\Psi_2|\Pi_1) = {P(\Pi_1|\Psi_2)P(\Psi_2) \over P(\Pi_1)} = {P(\Pi_1|\Psi_2)P(\Psi_2) \over {P(\Pi_1|\Psi_1)P(\Psi_1) + P(\Pi_1|\Psi_2)P(\Psi_2)}} = {c^2(1-\eta) \over \eta + c^2(1-\eta)}
-        \]
-        \[
-        L(1|2) = P(\Psi_1|\Pi_2) = {P(\Pi_2|\Psi_1)P(\Psi_1) \over P(\Pi_2)} = {P(\Pi_2|\Psi_1)P(\Psi_1) \over {P(\Pi_2|\Psi_1)P(\Psi_1) + P(\Pi_2|\Psi_2)P(\Psi_2)}} = 0
-        \]
-        \[
-        L(2|2) = P(\Psi_2|\Pi_2) = {P(\Pi_2|\Psi_2)P(\Psi_2) \over P(\Pi_2)} = {P(\Pi_2|\Psi_2)P(\Psi_2) \over {P(\Pi_2|\Psi_1)P(\Psi_1) + P(\Pi_2|\Psi_2)P(\Psi_2)}} = 1
-        \]
-        and we can check how the probabilities sum 1
-        <ul>
-          <li>If we get result $\Pi_1$ then $P(\Psi_1|\Pi_1) + P(\Psi_2|\Pi_1) = 1$.</li>
-          <li>If we get result $\Pi_2$ then $P(\Psi_1|\Pi_2) + P(\Psi_2|\Pi_2) = 1$.</li>
-        </ul>
-      </p>
-    </p>
+    <b>ANSWER</b><br>
+    We can approach to the problem with:
+    <ul>
+      <li>Likelihood (no probabilities)</li>
+      <li>Posterior probabilities</li>
+    </ul>
+    <u>Likelihood</u><br/>
+    In $L(state|outcome)$ we fix the <u>first argument</u>; so the state is fixed so the likelihood act as the previous probabilities:
+    <ul>
+      <li>$L(\Psi_1|\Pi_1) = P(\Pi_1|\Psi_1) = 1$</li>
+      <li>$L(\Psi_1|\Pi_2) = P(\Pi_2|\Psi_1) = 0$</li>
+      <li>$L(\Psi_2|\Pi_1) = P(\Pi_1|\Psi_2) = c^2$</li>
+      <li>$L(\Psi_2|\Pi_2) = P(\Pi_2|\Psi_2) = 1-c^2$</li>
+    </ul>
+    Notice that the likelihood <b>is not</b> a probability as we can see here were the sum is not equal to 1.
+    <ul>
+      <li>Given result $\Pi_1$ the sum of likelihood of $\Psi_1$ and $\Psi_2$ $\rightarrow$ $L(\Psi_1|\Pi_1) + L(\Psi_2|\Pi_1) = 1 + c^2$</li>
+      <li>Given result $\Pi_2$ the sum of likelihood of $\Psi_1$ and $\Psi_2$ $\rightarrow$ $L(\Psi_1|\Pi_2) + L(\Psi_2|\Pi_2) = 1 - c^2$</li>
+    </ul>
+    <u>As Probability</u><br>
+    An alternative way is to turn the likelihood in a <i>bona fide</i> probability distribution and compute $P(\Psi_i|\Pi_j)$ and use Baye's law:<br/>
+    \[
+    P(\Psi_i|\Pi_j) = \frac{P(\Pi_j|\Psi_i)P(\Psi_i)}{P(\Pi_j)} = \frac{P(\Pi_j|\Psi_i)P(\Psi_i)}{\sum_n{P(\Pi_j|\Psi_n)P(\Psi_n)}}
+    \]
+    If we plug all the info we get:
+    \[
+    P(\Psi_1|\Pi_1) = {P(\Pi_1|\Psi_1)P(\Psi_1) \over P(\Pi_1)} = {P(\Pi_1|\Psi_1)P(\Psi_1) \over {P(\Pi_1|\Psi_1)P(\Psi_1) + P(\Pi_1|\Psi_2)P(\Psi_2)}} = {\eta \over {\eta + c^2(1-\eta)}}
+    \]
+    \[
+    P(\Psi_2|\Pi_1) = {P(\Pi_1|\Psi_2)P(\Psi_2) \over P(\Pi_1)} = {P(\Pi_1|\Psi_2)P(\Psi_2) \over {P(\Pi_1|\Psi_1)P(\Psi_1) + P(\Pi_1|\Psi_2)P(\Psi_2)}} = {c^2(1-\eta) \over \eta + c^2(1-\eta)}
+    \]
+    \[
+    P(\Psi_1|\Pi_2) = {P(\Pi_2|\Psi_1)P(\Psi_1) \over P(\Pi_2)} = {P(\Pi_2|\Psi_1)P(\Psi_1) \over {P(\Pi_2|\Psi_1)P(\Psi_1) + P(\Pi_2|\Psi_2)P(\Psi_2)}} = 0
+    \]
+    \[
+    P(\Psi_2|\Pi_2) = {P(\Pi_2|\Psi_2)P(\Psi_2) \over P(\Pi_2)} = {P(\Pi_2|\Psi_2)P(\Psi_2) \over {P(\Pi_2|\Psi_1)P(\Psi_1) + P(\Pi_2|\Psi_2)P(\Psi_2)}} = 1
+    \]
+    In that case we can check they are probabilities and sum 1:
+    <ul>
+      <li>If we get result $\Pi_1$ then $P(\Psi_1|\Pi_1) + P(\Psi_2|\Pi_1) = 1$.</li>
+      <li>If we get result $\Pi_2$ then $P(\Psi_1|\Pi_2) + P(\Psi_2|\Pi_2) = 1$.</li>
+    </ul>
   </div>
 
-  <div class="exercise">
+  <div id="q4" class="exercise">
     <hr/>
-    <p class="title">
-    <b>(iv)</b> An <b>estimator</b> is any function $ f : \{1,2\} \rightarrow \{1,2\}$ that assigns to each measurement outcome $i \in \{1,2\}$ a guess $f(i) \in \{1,2\}$ regarding which state the electron's spin was in. Using your results in (iii) tell me your guess for each possible measurement outcome. This estimation is known as the <b>Maximum Likelihood Estimator (MLE)</b>.
+    <p class="question">
+      <b>QUESTION (iv)</b><br/>
+      An <b>estimator</b> is any function $ f : \{1,2\} \rightarrow \{1,2\}$ that assigns to each measurement outcome $i \in \{1,2\}$ a guess $f(i) \in \{1,2\}$ regarding which state the electron's spin was in. Using your results in (iii) tell me your guess for each possible measurement outcome. This estimation is known as the <b>Maximum Likelihood Estimator (MLE)</b>.
     </p>
     <p class="answer">
       <b>ANSWER</b><br/>
+      I will use probabiliteis 
+      So given a result $\Pi_i$ we have to "bet" for wich is the state with a higher probability for producing it. So, we have to find the bigger between:
       <ul>
-        <li>If the <b>outcome is $\Pi_2$</b> then it is clear that the status is $\Psi_2$.</li>
+        <li>For $\Pi_1$ we have to check which is bigger:
+          <ul>
+            <li>$P(\Psi_1|\Pi_1) = {\eta \over {\eta + c^2(1-\eta)}}$</li>
+            <li>$P(\Psi_2|\Pi_1) = {c^2(1-\eta) \over \eta + c^2(1-\eta)}$</li>
+          </ul>
+        </li>
+        <li>For $\Pi_2$ we have to check which is bigger
+          <ul>
+            <li>$P(\Psi_1|\Pi_2) = 0$</li>
+            <li>$P(\Psi_2|\Pi_2) = 1$</li>
+          </ul>
+        </li>
+      </ul>
+      Checking that:
+      <ul>
         <li>If the <b>outcome is $\Pi_1$</b> then can be $\Psi_1$ or $\Psi_2$ depending on $c$ and $\eta$.</li>
+        <li>If the <b>outcome is $\Pi_2$</b> then it is clear that the status is $\Psi_2$.</li>
       </ul>
-      Let's do the calculus for $\Pi_1$:
-      \[
-      P(\Psi_1|\Pi_1) = P(\Psi_2|\Pi_1)
-      \]
-      \[
-      {\eta \over {\eta + c^2(1-\eta)}} =  {c^2(1-\eta) \over \eta + c^2(1-\eta)}
-      \]
-      \[
-      c = \sqrt{\eta \over 1 - \eta}
-      \]
-      So:
+      Let's analyze with more detail the possibilities when $\Pi_1$:
       <ul>
-        <li>If $c > \sqrt{\eta \over 1 - \eta} \rightarrow P(\Psi_1|\Pi_1) < P(\Psi_2|\Pi_1)$.</li>
-        <li>If $c < \sqrt{\eta \over 1 - \eta} \rightarrow P(\Psi_1|\Pi_1) > P(\Psi_2|\Pi_1)$.</li>
+        <li><a href="https://www.wolframalpha.com/input/?i=Plot%5B%7Bn%2F%28n%2Bc%5E2*%281-n%29%29+%3C+c%5E2*%281-n%29%2F%28n%2Bc%5E2*%281-n%29%29%7D%2C+%7Bn%2C+0%2C+1%7D%2C+%7Bc%2C0%2C1%7D%5D">Case A : $P(\Psi_1|\Pi_1) < P(\Psi_2|\Pi_1)$</a></li>
+        <li><a href="https://www.wolframalpha.com/input/?i=Plot%5B%7Bn%2F%28n%2Bc%5E2*%281-n%29%29+%3E+c%5E2*%281-n%29%2F%28n%2Bc%5E2*%281-n%29%29%7D%2C+%7Bn%2C+0%2C+1%7D%2C+%7Bc%2C0%2C1%7D%5D">Case B : $P(\Psi_1|\Pi_1) > P(\Psi_2|\Pi_1)$</a></li>
       </ul>
-      So putting all together we get that the function is:
+      From the graphics we can see there are combinations of $c$ and $\eta$ where $\Psi_1$ is the best options and other when $\Psi_2$ is bettter, but for some reason (need to be checked) the solution provided in the exercise is:
       <ul>
-        <li>If $c < \sqrt{\eta \over 1 - \eta}$.
-          <ul>
-            <li>f(1) = 1</li>
-            <li>f(2) = 2</li>
-          </ul>
-        </li>
-        <li>If $c > \sqrt{\eta \over 1 - \eta}$.
-          <ul>
-            <li>f(1) = 2</li>
-            <li>f(2) = 2</li>
-          </ul>
-        </li>
+        <li>f(1) = 1</li>
+        <li>f(2) = 2</li>
+      </ul>
+      In fact this can be checked easily using likelihood instead probabilities becuse in this case for the case $\Pi_2$ we have to check which is bigger:
       <ul>
+        <li>$L(\Psi_1|\Pi_1) = 1$</li>
+        <li>$L(\Psi_2|\Pi_1) = c^2 $</li>
+      </ul>
+      and in that case no doubt, $\Psi_1$ is better <b>but I don't understand the use of the likelihood without taking into consideration the probability of producing $\Psi_1$ or $\Psi_2$; bet for $\Psi_1$ even when it the answer more probable if $\Psi_1$ is very seldom maybe is not the best strategy</b>
     <p>
   </div>
   
-  
-  <div class="exercise">
+  <div id="q5" class="exercise">
     <hr/>
     <p class="question">
       <b>QUESTION (v)</b><br/>
@@ -259,7 +237,7 @@ _  and ^   : subindex and superindex
     </p>
   </div>
 
-  <div class="exercise">
+  <div id="q6" class="exercise">
     <hr/>
     <p class="question">
       <b>QUESTION (vi)</b><br/>
@@ -281,7 +259,7 @@ _  and ^   : subindex and superindex
     </p>
   </div>
 
-  <div class="exercise">
+  <div id="q7" class="exercise">
     <hr/>
     <p class="question">
       <b>QUESTION (vii)</b><br/>
@@ -292,7 +270,7 @@ _  and ^   : subindex and superindex
     </p>
   </div>
 
-  <div class="exercise">
+  <div id="q8" class="exercise">
     <hr/>
     <p class="question">
       <b>QUESTION (viii)</b><br/>
