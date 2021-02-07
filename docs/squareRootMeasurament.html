@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<!-- https://www.overleaf.com/learn/latex -->
+<!--
+\( .... \) : inline
+\[ .... \] : block
+_  and ^   : subindex and superindex    
+\sum       : sum
+{...}      : contains another latx expression (eg. symbols)
+-->
+<html>
+<head>
+  <title>Square Root Measurament</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+  <h1>Square Root Measurament</h1>
+
+  <div class="exercise">
+    <hr/>
+    <p class="question">
+      <b>QUESTION 1.1.1</b><br/>
+      Show $\{E_y\}$ is a valid POVM.
+    </p>
+
+    <p class="answer">
+      <b>ANSWER</b><br/>
+      <b>1) Sum is the identity</b>
+      \[
+      \sum_y{E_y} = 
+      \sum_y{\ket{e_y}\bra{e_y}} = 
+      \sum_y{\rho^{-1/2}\ket{\tilde{\Psi_y}}\bra{\tilde{\Psi_y}}\rho^{-1/2}} = 
+      \rho^{-1/2}(\sum_y{\ket{\tilde{\Psi_y}}\bra{\tilde{\Psi_y}}})\rho^{-1/2} = 
+      ...
+      \]
+      Applying $\ket{\tilde{\Psi_y}} = \sqrt{p_y}\ket{\Psi_y}$ where $p_y > 0$
+      \[
+      ... = 
+      \rho^{-1/2}(\sum_y{\ket{\tilde{\Psi_y}}\bra{\tilde{\Psi_y}}})\rho^{-1/2} = 
+      \rho^{-1/2}(\sum_y{\sqrt{p_y}\ket{\Psi_y}\bra{\Psi_y}\sqrt{p_y}})\rho^{-1/2} = 
+      \rho^{-1/2}(\sum_y{{p_y}\ket{\Psi_y}\bra{\Psi_y}})\rho^{-1/2} =
+      ...
+      \]
+      Applying the definition $\rho = \sum_y{p_y\ket{\Psi_y}\bra{\Psi_y}}$ we get finally
+      \[
+      ... = 
+      \rho^{-1/2}(\sum_y{{p_y}\ket{\Psi_y}\bra{\Psi_y}})\rho^{-1/2} =
+      \rho^{-1/2}\rho\rho^{-1/2} = 
+      \mathbb{1}
+      \]
+
+      <b>2) Positive Operator??</b><br/>
+      Let's expand $E_y$:
+      \[
+      E_y = 
+      \ket{e_y}\bra{e_y} = 
+      \rho^{-1/2}\ket{\tilde{\Psi_y}}\bra{\tilde{\Psi_y}}\rho^{-1/2} = 
+      \rho^{-1/2}\sqrt{p_y}\ket{\Psi_y}\bra{\Psi_y}\rho^{-1/2}\sqrt{p_y} = 
+      \rho^{-1}p_y\ket{\Psi_y}\bra{\Psi_y}
+      \]
+      Self-adjoint. Using the fact the $\rho$ is positive and $\sqrt{p_y}$ is a real number
+      \[
+      E_y^{\dagger} = 
+      (\rho^{-1}p_y\ket{\Psi_y}\bra{\Psi_y})^{\dagger} = 
+      \rho^{-1}p_y\ket{\Psi_y}\bra{\Psi_y} = 
+      E_y
+      \]
+    </p>
+  </div>
+
+  <div class="exercise">
+    <hr/>
+    <p class="question">
+      <b>QUESTION 1.1.2</b><br/>
+      If $G_{xy}=\bra{\tilde{\Psi_x}} \ket{\tilde{\Psi_y}}$ show that $G^{1/2}_{xy} = \bra{\tilde{\Psi_x}} \rho^{-1/2} \ket{\tilde{\Psi_y}}$
+      <br/>
+      <b>ANSWER</b><br/>
+      Here trick, as always, is how to introduce the indentity and from the previous one we have a good candidate that uses $\rho^{-1/2}$
+      \[
+      \mathbb{1} = 
+      \sum_{k}E_{k} = 
+      \sum_{k}\ket{e_{k}}\bra{e_{k}} = 
+      \sum_{k}\ket{e_{k}}\bra{e_{k}} = 
+      \sum_{k}{\rho^{-1/2}\ket{\tilde{\Psi_k}}\bra{\tilde{\Psi_k}}\rho^{-1/2}} 
+      \]
+      So applying that th $G_{xy}$ we get
+      \[
+      G_{xy}=
+      \bra{\tilde{\Psi_x}} \ket{\tilde{\Psi_y}} = 
+      \bra{\tilde{\Psi_x}} \mathbb{1} \ket{\tilde{\Psi_y}} = 
+      \bra{\tilde{\Psi_x}} (\sum_{k}{\rho^{-1/2}\ket{\tilde{\Psi_k}}\bra{\tilde{\Psi_k}}\rho^{-1/2}}) \ket{\tilde{\Psi_y}} = 
+      \sum_{k} { \bra{\tilde{\Psi_x}} \rho^{-1/2} \ket{\tilde{\Psi_k}} \bra{\tilde{\Psi_k}} \rho^{-1/2} \ket{\tilde{\Psi_y}} } \equiv
+      \sum_{k} { S_{xk}S_{ky} }
+      \]
+      where
+      \[
+      S_{xy} \equiv \bra{\tilde{\Psi_x}} \rho^{-1/2} \ket{\tilde{\Psi_y}}
+      \]
+    </p>
+
+    <p class="answer">
+      <b>ANSWER</b><br/>
+    </p>
+  </div>
+</body>
+<script>
+window.MathJax = {
+  loader: {
+    load: ['[tex]/physics']
+  }, 
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+    packages: {'[+]': ['physics']}
+  }
+};
+</script>
+</html>
