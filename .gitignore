@@ -1,5 +1,4 @@
 # For now the Jupyter books
-*.ipynb
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
