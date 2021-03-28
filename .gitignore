@@ -133,3 +133,4 @@ dmypy.json
 # Ny Stuff
 _OLD/
 *.swp
+.DS_Store
