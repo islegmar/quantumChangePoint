@@ -134,3 +134,8 @@ dmypy.json
 _OLD/
 *.swp
 .DS_Store
+Victor/
+*.old/
+x
+xx
+xxx

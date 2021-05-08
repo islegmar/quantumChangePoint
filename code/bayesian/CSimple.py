@@ -1,10 +1,11 @@
+""" In a simple measurement we don't change the PVM. """
 import helstrom
 from CPVM import CPVM
 import math
 import numpy as np
 import logging
 
-class CBayesian:
+class CSimple:
     def __init__(self, experiments, c):
         self.logger=logging.getLogger("MainLogger")
 
@@ -45,11 +46,11 @@ class CBayesian:
             if experiment['states'][self.step]=='0':
                 if tmp_p_0<experiment['prob'][self.step]:
                     tmp_p_0 = experiment['prob'][self.step]
-                #tmp_p_0 += experiment['prob'][self.step]
+                tmp_p_0 += experiment['prob'][self.step]
             if experiment['states'][self.step]=='1':
                 if tmp_p_1<experiment['prob'][self.step]:
                     tmp_p_1 = experiment['prob'][self.step]
-                #tmp_p_1 += experiment['prob'][self.step]
+                tmp_p_1 += experiment['prob'][self.step]
 
         self.logger.debug("Tmp P(0) : %f" % (tmp_p_0))
         self.logger.debug("Tmp P(1) : %f" % (tmp_p_1))

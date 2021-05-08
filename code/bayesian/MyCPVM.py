@@ -78,12 +78,15 @@ class CPVM:
 
         self.logger.debug(counts)
         
+        result=None
         if '0' not in counts:
-            return 1
+            result=1
         elif '1' not in counts:
-            return 0
+            result=0
         else:
-            return 0 if counts['0'] > counts['1'] else 1
+            result=0 if counts['0'] > counts['1'] else 1
+
+        return result, circuit
 
 # -----------------------------------------------------------------------------
 # main
