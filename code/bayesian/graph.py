@@ -2,16 +2,18 @@ from matplotlib import pyplot as plt
 import numpy as np
 import argparse
 import os
+from scipy import interpolate
+
 
 BLACK="#000000"
 WHITE="#FFFFFF"
 RED="#FF0000"
-GREEN="#00FF00"
 BLUE="#0000FF"
 YELLOW="#FFFF00"
 CYAN="#00FFFF"
 MAGENTA="#FF00FF"
 BLUE_LIGHT="#ADD8E6"
+GREEN="#00FF00"
 GREEN_LIGHT="#90EE90"
 
 # In order
@@ -56,7 +58,11 @@ def drawGlobalLocal(totC, totIterations, strategies):
     plt.show()
 
 def drawStrategies(totC, totIterations):
-    fImage="graph-strategies-%d-%d.png" % (totC, totIterations)
+    fImage="graph-%d-%d.png" % (totC, totIterations)
+    COLOR_SQUARE_RM=BLACK
+    COLOR_BAYESIAN=GREEN
+    COLOR_PBL=BLUE
+    COLOR_HELSTROM=RED
 
     # --- Theoretical
     c = np.arange(0.001, 1.0, 0.001)
@@ -67,8 +73,26 @@ def drawStrategies(totC, totIterations):
                          5*(1/2*(1+np.sqrt(1-c**2)))**3 + 
                          2*(1/2*(1+np.sqrt(1-c**2)))**2 ) 
     
-    plt.plot(c,yPBL,label='PBL (theoretical)', color=BLUE)
-    plt.plot(c,yHelstrom,label='Helstrom (theoretical)', color=GREEN)
+    plt.plot(c,yPBL,label='PBL (theoretical)', color=COLOR_PBL)
+    plt.plot(c,yHelstrom,label='Helstrom (theoretical)', color=COLOR_HELSTROM)
+
+    # Theory Bayesian
+    fCSVBayesianTheory="data/CBayesianTheory-%d-0-global1.csv"    % (totC)
+    dBayesianTheory=np.genfromtxt(fCSVBayesianTheory,delimiter=",", names=["x", "y"])
+    # plt.scatter(dBayesianTheory['x'], dBayesianTheory['y'], label='Bayesian (theory)', color=COLOR_BAYESIAN)
+    # Interpolate
+    a_BSpline = interpolate.make_interp_spline(dBayesianTheory['x'], dBayesianTheory['y'])
+    y_new = a_BSpline(c)
+    plt.plot(c, y_new, label='Bayesian (theory)', color=COLOR_BAYESIAN)
+
+    # SquareRoot
+    fCSVSquareRoot="data/CSquareRoot-%d-0-global0.csv"    % (totC)
+    dSquareRoot=np.genfromtxt(fCSVSquareRoot,delimiter=",", names=["x", "y"])
+    # plt.scatter(dSquareRoot['x'], dSquareRoot['y'], label='Square Root Measurement', color=CYAN)
+    # Interporlate
+    a_BSpline = interpolate.make_interp_spline(dSquareRoot['x'], dSquareRoot['y'])
+    y_new = a_BSpline(c)
+    plt.plot(c, y_new, label='Square Root Measurement',color=COLOR_SQUARE_RM)
     
     # --- Experimental (data from a CSV)
     fCSVBasicLocal="data/CBasic-%d-%d-global0.csv"    % (totC, totIterations)
@@ -83,9 +107,9 @@ def drawStrategies(totC, totIterations):
     dHelstromLocal = np.genfromtxt(fCSVHelstromLocal, delimiter=",", names=["x", "y"])
     dBayesianLocal = np.genfromtxt(fCSVBayesianLocal, delimiter=",", names=["x", "y"])
     
-    plt.scatter(dBasicLocal['x'],     dBasicLocal['y'],     label='PBL (experimental)'   ,  color=BLUE)
-    plt.scatter(dHelstromLocal['x'],  dHelstromLocal['y'],  label='Helstrom (experimental)',  color=GREEN)
-    plt.scatter(dBayesianLocal['x'],  dBayesianLocal['y'],  label='Bayesian (experimental)',  color=RED)
+    plt.scatter(dBasicLocal['x'],     dBasicLocal['y'],     label='PBL (experimental)'   ,  color=COLOR_PBL)
+    plt.scatter(dHelstromLocal['x'],  dHelstromLocal['y'],  label='Helstrom (experimental)',  color=COLOR_HELSTROM)
+    plt.scatter(dBayesianLocal['x'],  dBayesianLocal['y'],  label='Bayesian (experimental)',  color=COLOR_BAYESIAN)
     
     plt.title('Probability of success with several strategies (analytical/experimental)')
     
@@ -96,7 +120,7 @@ def drawStrategies(totC, totIterations):
     
     plt.legend()
     
-    plt.show()
+    #plt.show()
     plt.savefig(fImage)
     print("Image %s created!" % (fImage))
 

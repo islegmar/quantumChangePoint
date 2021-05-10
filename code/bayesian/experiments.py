@@ -81,6 +81,11 @@ def doExperiments(p_class, p_tot, p_c, p_global):
 # main
 # -----------------------------------------------------------------------------
 if __name__ == "__main__":
+    print ("RUN")
+    print(logging)
+    logging.config.fileConfig('logging.conf')
+    logger = logging.getLogger('MainLogger')
+
     parser = argparse.ArgumentParser(description="<Help here>")
 
     # Actions
@@ -101,6 +106,7 @@ if __name__ == "__main__":
 
 
     # Run
+    print ("RUN")
     logging.config.fileConfig('logging.conf')
     logger = logging.getLogger('MainLogger')
 

@@ -32,11 +32,25 @@ class CHelstrom:
         self.logger.debug("[step : %d] Particle : %s" % (self.step, particle))
 
         # ------------------------------------------
-        # Step 1 : compute the p_0 and p_1 based
-        #          In this case we keep the same values all the time.
+        # Step 1 : compute the p_0 and p_1 based on
+        # the number of states each experiment has for both states
+        # The main difference with the Bayesian is that in this case we
+        # don't have into account the priors for each experiment.
         # ------------------------------------------
-        p_0=1/2
-        p_1=1/2
+        tmp_p_0=0.0
+        tmp_p_1=0.0
+        for experiment in self.experiments:
+            if experiment[self.step]=='0':
+                tmp_p_0 += 1
+            if experiment[self.step]=='1':
+                tmp_p_1 += 1
+
+        self.logger.debug("Tmp P(0) : %f" % (tmp_p_0))
+        self.logger.debug("Tmp P(1) : %f" % (tmp_p_1))
+
+        # Normalize so it is a good probability
+        p_0=tmp_p_0/(tmp_p_0+tmp_p_1)
+        p_1=tmp_p_1/(tmp_p_0+tmp_p_1)
 
         self.logger.debug("P(0) : %f" % (p_0))
         self.logger.debug("P(1) : %f" % (p_1))
