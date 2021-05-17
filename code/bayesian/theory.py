@@ -20,60 +20,126 @@ EXPERIMENTS=['11111','01111','00111','00011','00001']
 # -----------------------------------------------------------------------------
 # Functions
 # -----------------------------------------------------------------------------
-def _bayesian(p_c, p_global):
+def _bayesian(p_c, p_global, p_csv=None, p_outcome=None):
     from CBayesian import CBayesian
+
+    logger=logging.getLogger("MainLogger")
 
     pS=0
     totParticles=len(EXPERIMENTS[0])
+    totResults=2**totParticles
 
-    # Loop over all the experiments and for each of them compute its 
-    # Probability of success taken into accout all the possible outcomes when
-    # measuring
-    for experiment in EXPERIMENTS:
-        print ("[%f] experiment : %s" % (p_c,experiment))
-        totResults=2**totParticles
+    # Loop over all the possible outcomes
+    outcomes={}
+    for output_int in range(0,totResults):
+        # eg. output_int = 4 => output_str = 00100
+        output_str=format(output_int, '0%db' % (totParticles))
+        if p_outcome and p_outcome!=output_str: continue
+        logger.info("OUTPUT : %s" % (output_str))
 
-        # Loop over all the possible outcomes and for each of them see which is
-        # the probability of 'experiment'
-        outputs={}
-        for output_int in range(1,totResults):
-            # eg. output_int = 4 => output_str = 00100
-            output_str=format(output_int, '0%db' % (totParticles))
-            outputs[output_str] = { 'probOK' : None, 'probOutput':1.0 }
+        outcomes[output_str]={
+            'prob' : 1.0,
+            'likelihood' : None,
+            'steps' : []
+        }
 
-            #print ("  outcome : %s" % (output_str))
+        o_measurement=CBayesian(EXPERIMENTS, p_c)
+        my_real_outcome=""   # my_real_outcome are the REAL measurament that has taken place
+        for step,particle in enumerate(output_str):
+            my_real_outcome="%s%s" % (my_real_outcome, particle)
+            measurement=o_measurement.performMeasurement(particle, True)
+            outcomes[output_str]['steps'].append({
+                'outcome'    : my_real_outcome,
+                'prob'       : o_measurement.getProbOutcomes(my_real_outcome),
+                'likelihood' : o_measurement.getMaxLikelihood()
+            })
+            if not p_global and measurement==1:  break
 
-            o_measurement=CBayesian(EXPERIMENTS, p_c)
-            # Loop over all the possible individual outcomes and perform a 
-            # Bayesian 
-            for step,particle in enumerate(output_str):
-                measurement=o_measurement.performMeasurement(particle, True)
-                outputs[output_str]['probOutput']*=o_measurement.getProb(particle, experiment[step])
-                if not p_global and measurement==1:  break
-            outputs[output_str]['probOK']=o_measurement.getPS(experiment)
-            # for my_exp in EXPERIMENTS:
-            #     tot+=o_measurement.getPS(my_exp)
-            #     print("    P(%s|%s) : %f" % (my_exp, output_str, o_measurement.getPS(my_exp)))
-            # print("    ---- tot : %f, prob (%s) : %f" % (tot, output_str, prob_output))
-            # print(prob_output)
+        outcomes[output_str]['prob']       = o_measurement.getProbOutcomes(my_real_outcome)
+        outcomes[output_str]['likelihood'] = o_measurement.getMaxLikelihood()
 
-        # Experiment done
-        # Now let's compute taking into acount the normalizations
-        pMyExperiment=0.0
-        tot=0.0
-        for output_str, item in outputs.items():
-            tot+=item['probOutput']
-        for output_str, item in outputs.items():
-            pMyExperiment+=(item['probOutput']/tot)*item['probOK']
+        # Ok, now for this outcome let's compute the Ps
+        logger.info("Prob(%s[%s as real_outcome]) : %f, MaxLikelihood : %f" % (output_str,  my_real_outcome, outcomes[output_str]['prob'], outcomes[output_str]['likelihood']))
 
-        for output_str, item in outputs.items():
-            print ("[%s] Prob combination : %e, Prob OK : %e => %e" % 
-                    (output_str, item['probOutput'], item['probOK'], (item['probOutput']/tot)*item['probOK']))
+    # Normalize the probabilities for every outcome
+    ptot=0.0
+    for output_str, item in outcomes.items():
+        ptot+=item['prob']
 
-        print("P(%s) : %e" % (experiment, pMyExperiment))
-        pS+=pMyExperiment/len(EXPERIMENTS)
+    logger.info("c=%e, ptot=%e" % (p_c, ptot))
+    # Loop over all the outcomes to compute the probability of success that is
+    # the probability of its max. likelihood * probability of this outcome
+    pS=0.0
+    for output_str, item in outcomes.items():
+        logger.debug("[%s] Prob : %f (=%f/%f), Likelihood : %f" % (output_str, (item['prob']/ptot),item['prob'],ptot,item['likelihood']))
+        pS+=(item['prob']/ptot)*item['likelihood']
+        #pS+=item['prob']*item['likelihood']
+        #pS+=item['likelihood']/totResults
+        #pS+=item['likelihood']
         
-    print (">>>>> c:%f, pS:%f" % (p_c, pS))
+    logger.info("RESULT : PS(c=%f) : %f" % (p_c, pS))
+    if p_c== 0.5262631578947369:
+        logger.info("RESULT EXPERIMENTAL : PS(c=%f) : %f" % (p_c, 0.8452))
+    
+    if p_csv:
+        with open(p_csv, mode='w', newline='') as fCsv:
+            csv_writer = csv.writer(fCsv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+
+            header=['Outome', 'Prob Outcome (no normalized)', 'Prob outcome (normalized)', 'Max Likelihood', 'Probability of Success']
+            for ind in range(5):
+                header.extend([
+                        'Step %d : outcome' % (ind), 
+                        'Step %d : probability' % (ind), 
+                        'Step %d : max likelihood' % (ind)
+                ])
+            csv_writer.writerow(header)
+
+            PS               = 0.0
+            P_Outcome_NoNorm = 0.0
+            P_Outcome_Norm   = 0.0
+            for output_int in range(0,totResults):
+                output_str=format(output_int, '0%db' % (totParticles))
+                row=[]
+                row.append(output_str)
+
+                item=outcomes[output_str]
+                row.append(item['prob'])
+                row.append(item['prob']/ptot)
+                row.append(item['likelihood'])
+                row.append((item['prob']/ptot)*item['likelihood'])
+
+                for ind in range(5):
+                    if ind<len(item['steps']):
+                        row.extend([
+                            item['steps'][ind]['outcome'],
+                            item['steps'][ind]['prob'],
+                            item['steps'][ind]['likelihood']
+                        ])
+                    else:
+                        row.extend([
+                                '',
+                                '',
+                                ''
+                        ])
+                csv_writer.writerow(row)
+
+                # Acum for totals
+                P_Outcome_NoNorm += item['prob']
+                P_Outcome_Norm   += item['prob']/ptot
+                PS               += (item['prob']/ptot)*item['likelihood']
+
+
+            # TOTALS
+            csv_writer.writerow([
+                'TOTAL',
+                P_Outcome_NoNorm,
+                P_Outcome_Norm,
+                '',
+                PS
+            ])
+
+
+            print("File %s created!" % (p_csv))
 
     return pS
 
@@ -97,13 +163,14 @@ def doAllComputation(min_c, max_c, totC, p_className, p_csv, p_global):
         for ind in range(totC):
             c=min_c + ind*((max_c-min_c)/(args.totC-1))
             ps=doComputation(p_className, c, p_global)
-            csv_writer.writerow([c, ps])
+            if ps:
+                csv_writer.writerow([c, ps])
 
         print("File %s created!" % (p_csv))
 
-def doComputation(p_class, p_c, p_global):
+def doComputation(p_class, p_c, p_global,p_file_csv, p_outcome=None):
     if p_class=="CBayesianTheory":
-        return _bayesian(p_c, p_global)
+        return _bayesian(p_c, p_global, p_file_csv, p_outcome)
     elif p_class=="CSquareRoot":
         return _sqrt(p_c,5)
     else:
@@ -132,6 +199,7 @@ the duplicacted code between experiments.py and theory.py.""")
 
     # Optional
     parser.add_argument('--className',  default='CBayesianTheory', help='The class with the measurement strategy')
+    parser.add_argument('--outcome',    help='If specified compute for only one outome (degugging)')
     parser.add_argument('--c',          type=float, help='Overlap betwwen the states 0 and 1')
     parser.add_argument('--totC',       default=10, type=int, help='Number of values of c used')
     parser.add_argument('--glob',       default=0, type=int, help='0=local (stop at first 1), 1=global (do all measurements)')
@@ -142,10 +210,10 @@ the duplicacted code between experiments.py and theory.py.""")
     # Check parameters
 
     # Run
-    #logging.config.fileConfig('logging.conf')
-    #logger = logging.getLogger('MainLogger')
+    logging.config.fileConfig('logging.conf')
+    logger = logging.getLogger('MainLogger')
 
     if args.c:
-        doComputation(args.className, args.c, True if args.glob==1 else False)
+        doComputation(args.className, args.c, True if args.glob==1 else False, args.csv, args.outcome)
     else:
         doAllComputation(0.001, 0.999, args.totC, args.className, args.csv, True if args.glob==1 else False)

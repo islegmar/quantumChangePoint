@@ -25,12 +25,20 @@ COLORS = [
     YELLOW,
     CYAN
 ]
+STRATEGIES={
+        "SRM" : { "color" : "", "class" : "CBasic" },
+        "PBL" : { "color" : "", "class" : "CBasic" },
+        "Helstrom" : { "color" : "", "class" : "CBasic" },
+        "Bayesian" : { "color" : "", "class" : "CBasic" }
+}
+
 
 def assertFileExists(file):
     if not os.path.isfile(file):
         raise Exception("File %s does not exist!" % (file))
 
 def drawGlobalLocal(totC, totIterations, strategies):
+    fImage="graph-globalVSlocal.png"
     for ind, strategy in enumerate(strategies):
         fileLocal="data/%s-%d-%d-global0.csv"    % (strategy, totC, totIterations)
         fileGlobal="data/%s-%d-%d-global1.csv"    % (strategy, totC, totIterations)
@@ -39,8 +47,8 @@ def drawGlobalLocal(totC, totIterations, strategies):
             dLocal  = np.genfromtxt(fileLocal,  delimiter=",", names=["x", "y"])
             dGlobal = np.genfromtxt(fileGlobal, delimiter=",", names=["x", "y"])
             
-            plt.scatter(dLocal['x'],     dLocal['y'],     label='%s (local)'  % (strategy), color=COLORS[2*ind])
-            plt.scatter(dGlobal['x'],    dGlobal['y'],    label='%s (global)' % (strategy), color=COLORS[2*ind+1])
+            plt.scatter(dLocal['x'], dLocal['y'], label='%s (local)'  % (strategy[1:]), color=COLORS[2*ind])
+            plt.scatter(dGlobal['x'],dGlobal['y'],label='%s (global)' % (strategy[1:]), color=COLORS[2*ind+1])
         else:
             print("Ignoring strategy %s. File %s or %s does not exist." % (strategy, fileLocal, fileGlobal))
     
@@ -53,65 +61,76 @@ def drawGlobalLocal(totC, totIterations, strategies):
     
     plt.legend()
     
-    #plt.savefig(fImage)
-    #print("Image %s created!" % (fImage))
+    plt.savefig(fImage)
+    print("Image %s created!" % (fImage))
     plt.show()
 
-def drawStrategies(totC, totIterations):
+def drawStrategies(strategies, title, totC, totIterations):
     fImage="graph-%d-%d.png" % (totC, totIterations)
     COLOR_SQUARE_RM=BLACK
     COLOR_BAYESIAN=GREEN
     COLOR_PBL=BLUE
     COLOR_HELSTROM=RED
 
-    # --- Theoretical
     c = np.arange(0.001, 1.0, 0.001)
     n=5
-    
-    yPBL = 1 - c**2 + c**2/n
-    yHelstrom = (1/5)*( -2*(1/2*(1+np.sqrt(1-c**2)))**4 +
-                         5*(1/2*(1+np.sqrt(1-c**2)))**3 + 
-                         2*(1/2*(1+np.sqrt(1-c**2)))**2 ) 
-    
-    plt.plot(c,yPBL,label='PBL (theoretical)', color=COLOR_PBL)
-    plt.plot(c,yHelstrom,label='Helstrom (theoretical)', color=COLOR_HELSTROM)
+    for strategy in strategies:
+        if strategy not in STRATEGIES:
+            raise Exception("Unknown sttategy '%s'" % (strategy))
 
-    # Theory Bayesian
-    fCSVBayesianTheory="data/CBayesianTheory-%d-0-global1.csv"    % (totC)
-    dBayesianTheory=np.genfromtxt(fCSVBayesianTheory,delimiter=",", names=["x", "y"])
-    # plt.scatter(dBayesianTheory['x'], dBayesianTheory['y'], label='Bayesian (theory)', color=COLOR_BAYESIAN)
-    # Interpolate
-    a_BSpline = interpolate.make_interp_spline(dBayesianTheory['x'], dBayesianTheory['y'])
-    y_new = a_BSpline(c)
-    plt.plot(c, y_new, label='Bayesian (theory)', color=COLOR_BAYESIAN)
+        if strategy=="PBL":
+            # Theoretical
+            yPBL = 1 - c**2 + c**2/n
+            plt.plot(c,yPBL,label='PBL (theoretical)', color=COLOR_PBL)
 
-    # SquareRoot
-    fCSVSquareRoot="data/CSquareRoot-%d-0-global0.csv"    % (totC)
-    dSquareRoot=np.genfromtxt(fCSVSquareRoot,delimiter=",", names=["x", "y"])
-    # plt.scatter(dSquareRoot['x'], dSquareRoot['y'], label='Square Root Measurement', color=CYAN)
-    # Interporlate
-    a_BSpline = interpolate.make_interp_spline(dSquareRoot['x'], dSquareRoot['y'])
-    y_new = a_BSpline(c)
-    plt.plot(c, y_new, label='Square Root Measurement',color=COLOR_SQUARE_RM)
-    
-    # --- Experimental (data from a CSV)
-    fCSVBasicLocal="data/CBasic-%d-%d-global0.csv"    % (totC, totIterations)
-    fCSVHelstromLocal="data/CHelstrom-%d-%d-global0.csv"    % (totC, totIterations)
-    fCSVBayesianLocal="data/CBayesian-%d-%d-global0.csv"    % (totC, totIterations)
+            # Exprimental
+            fExperimentalData="data/CBasic-%d-%d-global0.csv" % (totC, totIterations)
+            assertFileExists(fExperimentalData)
+            dExperimental=np.genfromtxt(fExperimentalData, delimiter=",", names=["x", "y"])
+            plt.scatter(dExperimental['x'], dExperimental['y'], label='PBL (experimental)', color=COLOR_PBL)
+        elif strategy=="Helstrom":
+            # Theoretical
+            yHelstrom = (1/5)*( -2*(1/2*(1+np.sqrt(1-c**2)))**4 +
+                                 5*(1/2*(1+np.sqrt(1-c**2)))**3 + 
+                                 2*(1/2*(1+np.sqrt(1-c**2)))**2 ) 
+            plt.plot(c,yHelstrom,label='Helstrom (theoretical)', color=COLOR_HELSTROM)
 
-    assertFileExists(fCSVBasicLocal)
-    assertFileExists(fCSVHelstromLocal)
-    assertFileExists(fCSVBayesianLocal)
+            # Experimental
+            fExperimentalData="data/CHelstrom-%d-%d-global0.csv" % (totC, totIterations)
+            assertFileExists(fExperimentalData)
+            dExperimental = np.genfromtxt(fExperimentalData, delimiter=",", names=["x", "y"])
+            plt.scatter(dExperimental['x'], dExperimental['y'],label='Helstrom (experimental)', color=COLOR_HELSTROM)
+        elif strategy=="Bayesian":
+            # Not good results to be shown :-(
+            # --- # Theory 
+            # --- # In this case we don't have an analytical formula but serie of data
+            # --- fTheoreticalData="data/CBayesianTheory-%d-0-global0.csv" % (totC)
+            # --- dTheoretical=np.genfromtxt(fTheoreticalData,delimiter=",", names=["x", "y"])
+            # --- # plt.scatter(dBayesianTheory['x'], dBayesianTheory['y'], label='Bayesian (theory)', color=COLOR_BAYESIAN)
+            # --- # Interpolate
+            # --- a_BSpline = interpolate.make_interp_spline(dTheoretical['x'], dTheoretical['y'])
+            # --- plt.plot(c, a_BSpline(c), label='Bayesian (theory)', color=COLOR_BAYESIAN)
 
-    dBasicLocal    = np.genfromtxt(fCSVBasicLocal,    delimiter=",", names=["x", "y"])
-    dHelstromLocal = np.genfromtxt(fCSVHelstromLocal, delimiter=",", names=["x", "y"])
-    dBayesianLocal = np.genfromtxt(fCSVBayesianLocal, delimiter=",", names=["x", "y"])
+            # Experimental
+            fExperimentalData="data/CBayesian-%d-%d-global0.csv" % (totC, totIterations)
+            assertFileExists(fExperimentalData)
+            dExperimental = np.genfromtxt(fExperimentalData, delimiter=",", names=["x", "y"])
+            plt.scatter(dExperimental['x'], dExperimental['y'], label='Bayesian (experimental)',  color=COLOR_BAYESIAN)
+        elif strategy=="SRM":
+            pass
+            # Theory 
+            fTheoreticalData="data/CSquareRoot-%d-0-global0.csv"    % (totC)
+            dTheoretical=np.genfromtxt(fTheoreticalData,delimiter=",", names=["x", "y"])
+            # plt.scatter(dSquareRoot['x'], dSquareRoot['y'], label='Square Root Measurement', color=CYAN)
+            # Interporlate
+            a_BSpline = interpolate.make_interp_spline(dTheoretical['x'], dTheoretical['y'])
+            plt.plot(c, a_BSpline(c), label='Square Root Measurement',color=COLOR_SQUARE_RM)
+        else:
+            raise Exception("Unknown sttategy '%s'" % (strategy))
+        
+        
     
-    plt.scatter(dBasicLocal['x'],     dBasicLocal['y'],     label='PBL (experimental)'   ,  color=COLOR_PBL)
-    plt.scatter(dHelstromLocal['x'],  dHelstromLocal['y'],  label='Helstrom (experimental)',  color=COLOR_HELSTROM)
-    plt.scatter(dBayesianLocal['x'],  dBayesianLocal['y'],  label='Bayesian (experimental)',  color=COLOR_BAYESIAN)
-    
-    plt.title('Probability of success with several strategies (analytical/experimental)')
+    plt.title(title)
     
     plt.xlabel('c')
     plt.ylabel('Probability')
@@ -120,9 +139,44 @@ def drawStrategies(totC, totIterations):
     
     plt.legend()
     
-    #plt.show()
     plt.savefig(fImage)
     print("Image %s created!" % (fImage))
+    plt.show()
+
+def drawBayesian(totC, totIterations):
+    fImage="bayesian-theoreticaVSexperimental.png" 
+    COLOR_SQUARE_RM=BLACK
+    COLOR_BAYESIAN=GREEN
+    COLOR_PBL=BLUE
+    COLOR_HELSTROM=RED
+
+    # --- Theoretical
+    fCSVBayesianTheory="data/CBayesianTheory-%d-0-global0.csv"    % (totC)
+    dBayesianTheory=np.genfromtxt(fCSVBayesianTheory,delimiter=",", names=["x", "y"])
+    plt.scatter(dBayesianTheory['x'], dBayesianTheory['y'], label='Bayesian (theory)', color=BLACK)
+    #-- # Interpolate
+    #-- a_BSpline = interpolate.make_interp_spline(dBayesianTheory['x'], dBayesianTheory['y'])
+    #-- #y_new = a_BSpline(c)
+    #-- plt.plot(c, a_BSpline(c), label='Bayesian (theory)', color=COLOR_BAYESIAN)
+
+    # --- Experimental (data from a CSV)
+    fCSVBayesianLocal="data/CBayesian-%d-%d-global0.csv"    % (totC, totIterations)
+    assertFileExists(fCSVBayesianLocal)
+    dBayesianLocal = np.genfromtxt(fCSVBayesianLocal, delimiter=",", names=["x", "y"])
+    plt.scatter(dBayesianLocal['x'],  dBayesianLocal['y'],  label='Bayesian (experimental)',  color=RED)
+    
+    plt.title('Bayesian : theoretical vs. experimental')
+    
+    plt.xlabel('c')
+    plt.ylabel('Probability')
+    
+    plt.grid(alpha=.4,linestyle='--')
+    
+    plt.legend()
+    
+    plt.savefig(fImage)
+    print("Image %s created!" % (fImage))
+    plt.show()
 
 # -----------------------------------------------------------------------------
 # main
@@ -138,6 +192,8 @@ if __name__ == "__main__":
     parser.add_argument('--lg',    help='Show local / global results for a comma separated list of strategies')
     parser.add_argument('--totC',  default=10, type=int, help='Total of c values')
     parser.add_argument('--tot',   default=10, type=int, help='Total of times every experiment is executed')
+    parser.add_argument('--strategies',   default="SRM,PBL,Helstrom,Bayesian", help='Comma separarted line of strategies to be drawn')
+    parser.add_argument('--title',   default='Probability of success with several strategies (analytical/experimental)', help='Comma separarted line of strategies to be drawn')
 
     args = parser.parse_args()
 
@@ -147,4 +203,5 @@ if __name__ == "__main__":
     if args.lg:
         drawGlobalLocal(args.totC, args.tot, args.lg.split(","))
     else:
-        drawStrategies(args.totC, args.tot)
+        drawStrategies(args.strategies.split(","), args.title, args.totC, args.tot)
+        #drawBayesian(args.totC, args.tot)
